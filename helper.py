@@ -13,10 +13,10 @@ def get_ellipse_coords(point: tuple[int, int]) -> tuple[int, int, int, int]:
 
 def flip_court(current_court):
     print('fliing court')
-    if current_court == "img/bball_court_north.png":
-        st.session_state['current_court'] = "img/bball_court_south.png"
+    if current_court == "north":
+        st.session_state['current_court'] = "south"
     else:
-        st.session_state['current_court'] = "img/bball_court_north.png"
+        st.session_state['current_court'] = "north"
 
 
 def flip_coordinates(image_size, original_coords):

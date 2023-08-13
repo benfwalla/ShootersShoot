@@ -21,24 +21,24 @@ if 'rebound_location' not in st.session_state:
     st.session_state['rebound_location'] = ()
 
 if 'data' not in st.session_state:
-    data = pd.DataFrame(columns=['shot_x', 'shot_y', 'rebound_x', 'rebound_y'])
+    data = pd.DataFrame(columns=['shot_x', 'shot_y', 'rebound_x', 'rebound_y', 'side'])
     st.session_state['data'] = data
 
 if 'old_value' not in st.session_state:
     st.session_state['old_value'] = None
 
 if 'current_court' not in st.session_state:
-    st.session_state['current_court'] = "img/bball_court_north.png"
+    st.session_state['current_court'] = "north"
 
 data = st.session_state['data']
 
 selected = pills("Shot or Rebound", ["Shot", "Rebound"])
 
-# if st.button('🔄'):
-#     flip_court(st.session_state['current_court'])
+if st.button('🔄'):
+    flip_court(st.session_state['current_court'])
 
 # bball_court_north.png is 765×722
-with Image.open(st.session_state['current_court']) as img:
+with Image.open('img/bball_court_{}.png'.format(st.session_state['current_court'])) as img:
     draw = ImageDraw.Draw(img)
 
     if st.session_state['shot_location']:
@@ -77,7 +77,8 @@ if st.button('Add Row', type="primary"):
         row = pd.DataFrame({'shot_x': [st.session_state['shot_location'][0]],
                             'shot_y': [st.session_state['shot_location'][1]],
                             'rebound_x': [st.session_state['rebound_location'][0]],
-                            'rebound_y': [st.session_state['rebound_location'][1]]})
+                            'rebound_y': [st.session_state['rebound_location'][1]],
+                            'side': [st.session_state['current_court']]})
         st.session_state['data'] = pd.concat([st.session_state['data'], row])
         st.session_state['data'].reset_index(drop=True, inplace=True)
 
@@ -92,7 +93,7 @@ st.data_editor(data, width=1000, num_rows='dynamic')
 
 st.download_button(
     "⬇️ Download Data",
-    data.to_csv().encode('utf-8'),
+    data.to_csv().encode('utf-8'),\
     "data.csv",
     "text/csv",
     key='download-csv'
